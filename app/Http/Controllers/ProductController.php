@@ -7,6 +7,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+
 class ProductController extends Controller
 {
 
@@ -27,6 +29,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $product = $this->service->create($request->validated());
+        Cache::forget('products_list');
 
         return response()->json($product, 201);
     }
@@ -34,6 +37,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $updated = $this->service->update($product, $request->validated());
+        Cache::forget('products_list');
 
         return response()->json($updated);
     }
@@ -41,7 +45,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $this->service->delete($product);
-
+        Cache::forget('products_list');
         return response()->json([
             'message' => 'Product deleted successfully'
         ]);

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\ProductRepositoryInterface;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 
 class ProductService
 {
@@ -13,7 +14,9 @@ class ProductService
 
     public function list()
     {
-        return $this->repo->all();
+        return Cache::remember('products_list', 60, function () {
+            return $this->repo->all();
+        });
     }
 
     public function find(string $id)
