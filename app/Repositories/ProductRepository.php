@@ -31,4 +31,10 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return $product->delete();
     }
+
+    public function lowStock()
+    {
+        return Product::whereColumn('stock_quantity', '<=', 'low_stock_threshold')
+            ->get();
+    }
 }

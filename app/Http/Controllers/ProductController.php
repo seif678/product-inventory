@@ -6,7 +6,7 @@ use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-
+use Illuminate\Http\Request;
 class ProductController extends Controller
 {
 
@@ -45,5 +45,19 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Product deleted successfully'
         ]);
+    }
+
+    public function lowStock()
+    {
+        return response()->json(
+            $this->service->lowStock()
+        );
+    }
+
+    public function adjustStock(Request $request, Product $product)
+    {
+        return response()->json(
+            $this->service->adjustStock($product, $request->all())
+        );
     }
 }

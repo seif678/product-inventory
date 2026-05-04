@@ -35,4 +35,31 @@ class ProductService
     {
         return $this->repo->delete($product);
     }
+
+    public function lowStock()
+    {
+        return $this->repo->lowStock();
+    }
+
+    public function adjustStock(Product $product, array $data)
+    {
+        $type = $data['type'];
+        $quantity = $data['quantity'];
+
+        if ($type === 'increment') {
+            $product->stock_quantity += $quantity;
+        }
+
+        if ($type === 'decrement') {
+            $product->stock_quantity -= $quantity;
+
+            if ($product->stock_quantity < 0) {
+                $product->stock_quantity = 0;
+            }
+        }
+
+        return $this->repo->update($product, [
+            'stock_quantity' => $product->stock_quantity
+        ]);
+    }
 }
