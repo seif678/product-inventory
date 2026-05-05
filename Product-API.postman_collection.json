@@ -1,0 +1,129 @@
+{
+  "info": {
+    "name": "Product Inventory API (Full Test)",
+    "_postman_id": "f9b1c2d3-e456-7890-abcd-123456789000",
+    "description": "Full API testing collection for Product Inventory system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Product",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"P001\",\n  \"name\": \"Laptop\",\n  \"description\": \"Gaming laptop\",\n  \"price\": 1200.50,\n  \"stock_quantity\": 10,\n  \"low_stock_threshold\": 3,\n  \"status\": \"active\"\n}"
+        },
+        "url": "{{base_url}}/api/products"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.environment.set(\"product_id\", jsonData.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All Products",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/products"
+      }
+    },
+    {
+      "name": "Get Single Product",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/products/{{product_id}}"
+      }
+    },
+    {
+      "name": "Update Product",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Laptop\",\n  \"price\": 1500\n}"
+        },
+        "url": "{{base_url}}/api/products/{{product_id}}"
+      }
+    },
+    {
+      "name": "Increase Stock",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"increment\",\n  \"quantity\": 5\n}"
+        },
+        "url": "{{base_url}}/api/products/{{product_id}}/stock"
+      }
+    },
+    {
+      "name": "Decrease Stock",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"decrement\",\n  \"quantity\": 2\n}"
+        },
+        "url": "{{base_url}}/api/products/{{product_id}}/stock"
+      }
+    },
+    {
+      "name": "Low Stock Products",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/products/low-stock"
+      }
+    },
+    {
+      "name": "Delete Product",
+      "request": {
+        "method": "DELETE",
+        "url": "{{base_url}}/api/products/{{product_id}}"
+      }
+    },
+    {
+      "name": "Validation Test (Missing Fields)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Invalid Product\"\n}"
+        },
+        "url": "{{base_url}}/api/products"
+      }
+    }
+  ]
+}
